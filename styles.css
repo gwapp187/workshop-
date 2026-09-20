@@ -77,3 +77,17 @@ td {
 th {
   color: #9ca3af;
 }
+.action-button {
+  width: auto;
+  padding: 8px 10px;
+  margin: 3px;
+  font-size: 14px;
+}
+
+.edit-button {
+  background: #2563eb;
+}
+
+.delete-button {
+  background: #dc2626;
+}
