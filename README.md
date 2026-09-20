@@ -1,4 +1,4 @@
-# workshop-# Workshop Job Tracker
+#Workshop Job Tracker
 
 A simple full-stack application for managing fabrication and workshop jobs.
 
