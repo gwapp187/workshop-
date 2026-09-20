@@ -1,33 +1,71 @@
 # Workshop Job Tracker
 
-A simple full-stack application for managing fabrication and workshop jobs.
+A full-stack web application for managing fabrication and workshop jobs.
 
-## Why I built this
+## Live Project
 
-I work in welding and fabrication and wanted to build something based on a real problem I understand.
+Frontend:  
+https://gwapp187.github.io/workshop-/
 
-The aim is to make it easy to keep track of workshop jobs, materials, quantities, deadlines and progress.
+Backend API:  
+https://workshop-job-tracker-api.onrender.com
 
-    completed features: add, edit, delete, status tracking, persistent database storage.
+## About the Project
 
-- Add new jobs
+I built this project because I work in welding and fabrication and wanted to create something based on a real problem I understand.
+
+The app is designed to make it easier to keep track of workshop jobs, materials, quantities, deadlines and job progress.
+
+I started with a simple front-end version using browser storage, then developed it further by adding a Node.js and Express backend with a PostgreSQL database.
+
+## Features
+
+- Add new workshop jobs
 - Edit existing jobs
 - Delete jobs
 - Track job status
-- Record material and quantity
-- Add due dates and notes
-- Store jobs in a databas
+- Record materials
+- Record quantities
+- Add due dates
+- Store jobs in a PostgreSQL database
+- Access the same job data from different devices
+- Responsive design for mobile and desktop
 
-## Status
+## Technologies Used
 
-Currently in development.
-
-## What I'm learning
-
+### Frontend
 - HTML
 - CSS
 - JavaScript
+- Fetch API
+- GitHub Pages
+
+### Backend
 - Node.js
 - Express
-- Databases
-- Git and GitHub
+- REST API
+- CORS
+
+### Database
+- PostgreSQL
+
+### Deployment
+- GitHub
+- GitHub Pages
+- Render
+
+## How It Works
+
+The frontend sends requests to the Express API hosted on Render.
+
+The API handles creating, reading, updating and deleting workshop jobs.
+
+The job data is stored permanently in a PostgreSQL database rather than being stored only in the user's browser.
+
+## API Endpoints
+
+```text
+GET    /api/jobs
+POST   /api/jobs
+PUT    /api/jobs/:id
+DELETE /api/jobs/:id
