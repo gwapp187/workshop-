@@ -1,64 +1,92 @@
-const form = document.querySelector("form");
-const inputs = form.querySelectorAll("input");
-const statusSelect = form.querySelector("select");
-const table = document.querySelector("table");
+<!DOCTYPE html>
+<html lang="en">
 
-let jobs = JSON.parse(localStorage.getItem("workshopJobs")) || [];
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-function saveJobs() {
-  localStorage.setItem("workshopJobs", JSON.stringify(jobs));
-}
+  <title>Workshop Job Tracker</title>
 
-function displayJobs() {
-  while (table.rows.length > 1) {
-    table.deleteRow(1);
-  }
+  <link rel="stylesheet" href="styles.css">
+</head>
 
-  jobs.forEach(function (job) {
-    const row = table.insertRow();
+<body>
 
-    const jobCell = row.insertCell();
-    const materialCell = row.insertCell();
-    const quantityCell = row.insertCell();
-    const dueDateCell = row.insertCell();
-    const statusCell = row.insertCell();
+  <h1>Workshop Job Tracker</h1>
 
-    jobCell.textContent = job.jobName;
-    materialCell.textContent = job.material;
-    quantityCell.textContent = job.quantity;
-    dueDateCell.textContent = job.dueDate;
-    statusCell.textContent = job.status;
-  });
-}
+  <p>Track fabrication jobs from start to finish.</p>
 
-form.addEventListener("submit", function (event) {
-  event.preventDefault();
+  <h2>Add New Job</h2>
 
-  const jobName = inputs[0].value.trim();
-  const material = inputs[1].value.trim();
-  const quantity = inputs[2].value;
-  const dueDate = inputs[3].value;
-  const status = statusSelect.value;
+  <form>
 
-  if (!jobName || !material || !quantity || !dueDate) {
-    alert("Please fill in all fields.");
-    return;
-  }
+    <label>Job Name</label>
+    <br>
+    <input
+      type="text"
+      placeholder="e.g. Steel Handrail"
+    >
 
-  const newJob = {
-    jobName,
-    material,
-    quantity,
-    dueDate,
-    status
-  };
+    <br><br>
 
-  jobs.push(newJob);
+    <label>Material</label>
+    <br>
+    <input
+      type="text"
+      placeholder="e.g. Mild Steel"
+    >
 
-  saveJobs();
-  displayJobs();
+    <br><br>
 
-  form.reset();
-});
+    <label>Quantity</label>
+    <br>
+    <input
+      type="number"
+      min="1"
+      placeholder="1"
+    >
 
-displayJobs();
+    <br><br>
+
+    <label>Due Date</label>
+    <br>
+    <input type="date">
+
+    <br><br>
+
+    <label>Status</label>
+    <br>
+
+    <select>
+      <option>To Do</option>
+      <option>In Progress</option>
+      <option>Complete</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">
+      Add Job
+    </button>
+
+  </form>
+
+  <h2>Workshop Jobs</h2>
+
+  <table border="1">
+
+    <tr>
+      <th>Job</th>
+      <th>Material</th>
+      <th>Qty</th>
+      <th>Due</th>
+      <th>Status</th>
+    </tr>
+
+  </table>
+
+  <script src="script.js?v=2"></script>
+
+</body>
+
+</html>
