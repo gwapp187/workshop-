@@ -1,15 +1,13 @@
+const API_URL = "https://workshop-job-tracker-api.onrender.com/api/jobs";
+
 const form = document.querySelector("form");
 const inputs = form.querySelectorAll("input");
 const statusSelect = form.querySelector("select");
 const table = document.querySelector("table");
 const submitButton = form.querySelector('button[type="submit"]');
 
-let jobs = JSON.parse(localStorage.getItem("workshopJobs")) || [];
-let editingIndex = null;
-
-function saveJobs() {
-  localStorage.setItem("workshopJobs", JSON.stringify(jobs));
-}
+let jobs = [];
+let editingId = null;
 
 function addActionsHeading() {
   const headingRow = table.rows[0];
@@ -21,6 +19,22 @@ function addActionsHeading() {
   }
 }
 
+async function loadJobs() {
+  try {
+    const response = await fetch(API_URL);
+
+    if (!response.ok) {
+      throw new Error("Could not load jobs");
+    }
+
+    jobs = await response.json();
+    displayJobs();
+  } catch (error) {
+    console.error(error);
+    alert("Could not load jobs from the server.");
+  }
+}
+
 function displayJobs() {
   addActionsHeading();
 
@@ -28,21 +42,16 @@ function displayJobs() {
     table.deleteRow(1);
   }
 
-  jobs.forEach(function (job, index) {
+  jobs.forEach(function (job) {
     const row = table.insertRow();
 
-    const jobCell = row.insertCell();
-    const materialCell = row.insertCell();
-    const quantityCell = row.insertCell();
-    const dueDateCell = row.insertCell();
-    const statusCell = row.insertCell();
-    const actionsCell = row.insertCell();
+    row.insertCell().textContent = job.jobName;
+    row.insertCell().textContent = job.material;
+    row.insertCell().textContent = job.quantity;
+    row.insertCell().textContent = job.dueDate;
+    row.insertCell().textContent = job.status;
 
-    jobCell.textContent = job.jobName;
-    materialCell.textContent = job.material;
-    quantityCell.textContent = job.quantity;
-    dueDateCell.textContent = job.dueDate;
-    statusCell.textContent = job.status;
+    const actionsCell = row.insertCell();
 
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
@@ -55,7 +64,7 @@ function displayJobs() {
       inputs[3].value = job.dueDate;
       statusSelect.value = job.status;
 
-      editingIndex = index;
+      editingId = job.id;
       submitButton.textContent = "Update Job";
 
       form.scrollIntoView({
@@ -67,22 +76,31 @@ function displayJobs() {
     deleteButton.textContent = "Delete";
     deleteButton.className = "action-button delete-button";
 
-    deleteButton.addEventListener("click", function () {
+    deleteButton.addEventListener("click", async function () {
       const confirmed = confirm(
         "Delete " + job.jobName + "?"
       );
 
-      if (confirmed) {
-        jobs.splice(index, 1);
+      if (!confirmed) {
+        return;
+      }
 
-        saveJobs();
-        displayJobs();
+      try {
+        const response = await fetch(
+          API_URL + "/" + job.id,
+          {
+            method: "DELETE"
+          }
+        );
 
-        if (editingIndex === index) {
-          form.reset();
-          editingIndex = null;
-          submitButton.textContent = "Add Job";
+        if (!response.ok) {
+          throw new Error("Could not delete job");
         }
+
+        await loadJobs();
+      } catch (error) {
+        console.error(error);
+        alert("Could not delete the job.");
       }
     });
 
@@ -91,40 +109,64 @@ function displayJobs() {
   });
 }
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const jobName = inputs[0].value.trim();
-  const material = inputs[1].value.trim();
-  const quantity = inputs[2].value;
-  const dueDate = inputs[3].value;
-  const status = statusSelect.value;
+  const job = {
+    jobName: inputs[0].value.trim(),
+    material: inputs[1].value.trim(),
+    quantity: Number(inputs[2].value),
+    dueDate: inputs[3].value,
+    status: statusSelect.value
+  };
 
-  if (!jobName || !material || !quantity || !dueDate) {
+  if (
+    !job.jobName ||
+    !job.material ||
+    !job.quantity ||
+    !job.dueDate
+  ) {
     alert("Please fill in all fields.");
     return;
   }
 
-  const job = {
-    jobName,
-    material,
-    quantity,
-    dueDate,
-    status
-  };
+  try {
+    let response;
 
-  if (editingIndex === null) {
-    jobs.push(job);
-  } else {
-    jobs[editingIndex] = job;
-    editingIndex = null;
+    if (editingId === null) {
+      response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(job)
+      });
+    } else {
+      response = await fetch(
+        API_URL + "/" + editingId,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(job)
+        }
+      );
+    }
+
+    if (!response.ok) {
+      throw new Error("Could not save job");
+    }
+
+    form.reset();
+    editingId = null;
+    submitButton.textContent = "Add Job";
+
+    await loadJobs();
+  } catch (error) {
+    console.error(error);
+    alert("Could not save the job.");
   }
-
-  saveJobs();
-  displayJobs();
-
-  form.reset();
-  submitButton.textContent = "Add Job";
 });
 
-displayJobs();
+loadJobs();
