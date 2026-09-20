@@ -1,92 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
+const form = document.querySelector("form");
+const inputs = form.querySelectorAll("input");
+const statusSelect = form.querySelector("select");
+const table = document.querySelector("table");
+const submitButton = form.querySelector('button[type="submit"]');
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+let jobs = JSON.parse(localStorage.getItem("workshopJobs")) || [];
+let editingIndex = null;
 
-  <title>Workshop Job Tracker</title>
+function saveJobs() {
+  localStorage.setItem("workshopJobs", JSON.stringify(jobs));
+}
 
-  <link rel="stylesheet" href="styles.css">
-</head>
+function addActionsHeading() {
+  const headingRow = table.rows[0];
 
-<body>
+  if (headingRow.cells.length < 6) {
+    const heading = document.createElement("th");
+    heading.textContent = "Actions";
+    headingRow.appendChild(heading);
+  }
+}
 
-  <h1>Workshop Job Tracker</h1>
+function displayJobs() {
+  addActionsHeading();
 
-  <p>Track fabrication jobs from start to finish.</p>
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
 
-  <h2>Add New Job</h2>
+  jobs.forEach(function (job, index) {
+    const row = table.insertRow();
 
-  <form>
+    const jobCell = row.insertCell();
+    const materialCell = row.insertCell();
+    const quantityCell = row.insertCell();
+    const dueDateCell = row.insertCell();
+    const statusCell = row.insertCell();
+    const actionsCell = row.insertCell();
 
-    <label>Job Name</label>
-    <br>
-    <input
-      type="text"
-      placeholder="e.g. Steel Handrail"
-    >
+    jobCell.textContent = job.jobName;
+    materialCell.textContent = job.material;
+    quantityCell.textContent = job.quantity;
+    dueDateCell.textContent = job.dueDate;
+    statusCell.textContent = job.status;
 
-    <br><br>
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    editButton.className = "action-button edit-button";
 
-    <label>Material</label>
-    <br>
-    <input
-      type="text"
-      placeholder="e.g. Mild Steel"
-    >
+    editButton.addEventListener("click", function () {
+      inputs[0].value = job.jobName;
+      inputs[1].value = job.material;
+      inputs[2].value = job.quantity;
+      inputs[3].value = job.dueDate;
+      statusSelect.value = job.status;
 
-    <br><br>
+      editingIndex = index;
+      submitButton.textContent = "Update Job";
 
-    <label>Quantity</label>
-    <br>
-    <input
-      type="number"
-      min="1"
-      placeholder="1"
-    >
+      form.scrollIntoView({
+        behavior: "smooth"
+      });
+    });
 
-    <br><br>
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.className = "action-button delete-button";
 
-    <label>Due Date</label>
-    <br>
-    <input type="date">
+    deleteButton.addEventListener("click", function () {
+      const confirmed = confirm(
+        "Delete " + job.jobName + "?"
+      );
 
-    <br><br>
+      if (confirmed) {
+        jobs.splice(index, 1);
 
-    <label>Status</label>
-    <br>
+        saveJobs();
+        displayJobs();
 
-    <select>
-      <option>To Do</option>
-      <option>In Progress</option>
-      <option>Complete</option>
-    </select>
+        if (editingIndex === index) {
+          form.reset();
+          editingIndex = null;
+          submitButton.textContent = "Add Job";
+        }
+      }
+    });
 
-    <br><br>
+    actionsCell.appendChild(editButton);
+    actionsCell.appendChild(deleteButton);
+  });
+}
 
-    <button type="submit">
-      Add Job
-    </button>
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
 
-  </form>
+  const jobName = inputs[0].value.trim();
+  const material = inputs[1].value.trim();
+  const quantity = inputs[2].value;
+  const dueDate = inputs[3].value;
+  const status = statusSelect.value;
 
-  <h2>Workshop Jobs</h2>
+  if (!jobName || !material || !quantity || !dueDate) {
+    alert("Please fill in all fields.");
+    return;
+  }
 
-  <table border="1">
+  const job = {
+    jobName,
+    material,
+    quantity,
+    dueDate,
+    status
+  };
 
-    <tr>
-      <th>Job</th>
-      <th>Material</th>
-      <th>Qty</th>
-      <th>Due</th>
-      <th>Status</th>
-    </tr>
+  if (editingIndex === null) {
+    jobs.push(job);
+  } else {
+    jobs[editingIndex] = job;
+    editingIndex = null;
+  }
 
-  </table>
+  saveJobs();
+  displayJobs();
 
-  <script src="script.js?v=2"></script>
+  form.reset();
+  submitButton.textContent = "Add Job";
+});
 
-</body>
-
-</html>
+displayJobs();
