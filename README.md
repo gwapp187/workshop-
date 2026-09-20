@@ -8,7 +8,7 @@ I work in welding and fabrication and wanted to build something based on a real 
 
 The aim is to make it easy to keep track of workshop jobs, materials, quantities, deadlines and progress.
 
-## Planned features
+    completed features: add, edit, delete, status tracking, persistent database storage.
 
 - Add new jobs
 - Edit existing jobs
@@ -16,7 +16,7 @@ The aim is to make it easy to keep track of workshop jobs, materials, quantities
 - Track job status
 - Record material and quantity
 - Add due dates and notes
-- Store jobs in a database
+- Store jobs in a databas
 
 ## Status
 
