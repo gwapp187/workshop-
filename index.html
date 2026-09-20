@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop Job Tracker</title>
+</head>
 
+<body>
+
+  <h1>Workshop Job Tracker</h1>
+  <p>Track fabrication jobs from start to finish.</p>
+
+  <h2>Add New Job</h2>
+
+  <form>
+    <label>Job Name</label><br>
+    <input type="text" placeholder="e.g. Steel Handrail">
+
+    <br><br>
+
+    <label>Material</label><br>
+    <input type="text" placeholder="e.g. Mild Steel">
+
+    <br><br>
+
+    <label>Quantity</label><br>
+    <input type="number" placeholder="1">
+
+    <br><br>
+
+    <label>Due Date</label><br>
+    <input type="date">
+
+    <br><br>
+
+    <label>Status</label><br>
+    <select>
+      <option>To Do</option>
+      <option>In Progress</option>
+      <option>Complete</option>
+    </select>
+
+    <br><br>
+
+    <button type="submit">Add Job</button>
+  </form>
+
+  <h2>Workshop Jobs</h2>
+
+  <table border="1">
+    <tr>
+      <th>Job</th>
+      <th>Material</th>
+      <th>Qty</th>
+      <th>Due</th>
+      <th>Status</th>
+    </tr>
+
+    <tr>
+      <td>Handrail</td>
+      <td>Mild Steel</td>
+      <td>4</td>
+      <td>25 Sep</td>
+      <td>In Progress</td>
+    </tr>
+  </table>
+
+</body>
+</html>
