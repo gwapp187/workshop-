@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">title>Workshop Job Tracker</title>
+
+  <title>Workshop Job Tracker</title>
+
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 
 <body>
@@ -14,6 +18,7 @@
   <h2>Add New Job</h2>
 
   <form>
+
     <label>Job Name</label><br>
     <input type="text" placeholder="e.g. Steel Handrail">
 
@@ -25,7 +30,7 @@
     <br><br>
 
     <label>Quantity</label><br>
-    <input type="number" placeholder="1">
+    <input type="number" min="1" placeholder="1">
 
     <br><br>
 
@@ -35,6 +40,7 @@
     <br><br>
 
     <label>Status</label><br>
+
     <select>
       <option>To Do</option>
       <option>In Progress</option>
@@ -44,6 +50,7 @@
     <br><br>
 
     <button type="submit">Add Job</button>
+
   </form>
 
   <h2>Workshop Jobs</h2>
@@ -56,15 +63,10 @@
       <th>Due</th>
       <th>Status</th>
     </tr>
-
-    <tr>
-      <td>Handrail</td>
-      <td>Mild Steel</td>
-      <td>4</td>
-      <td>25 Sep</td>
-      <td>In Progress</td>
-    </tr>
   </table>
-<script src="script.js"></script>
+
+  <script src="script.js?v=3"></script>
+
 </body>
+
 </html>
